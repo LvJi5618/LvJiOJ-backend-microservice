@@ -1,0 +1,51 @@
+spring:
+  cloud:
+    # nacos server地址
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      #  gateway 接口路由配置
+      routes:
+          #  服务名称
+        - id: lvjioj-backend-user-service
+          #  负载均衡写法
+          uri: lb://lvjioj-backend-user-service
+          #  根据什么规则路由到该服务
+          predicates:
+            - Path=/api/user/**
+        - id: lvjioj-backend-question-service
+          uri: lb://lvjioj-backend-question-service
+          predicates:
+            - Path=/api/question/**
+        - id: lvjioj-backend-judge-service
+          uri: lb://lvjioj-backend-judge-service
+          predicates:
+            - Path=/api/judge/**
+  application:
+    name: lvjioj-backend-gateway
+  #spring cloud 要求必须为响应式web
+  main:
+    web-application-type: reactive
+server:
+  port: 8122
+# 基于Knife4j,实现网关聚合子服务接口文档
+knife4j:
+  gateway:
+    # ① 开启gateway组件开关
+    enabled: true
+    # ② 设置聚合模式采用 discover 服务发现模式
+    strategy: discover
+    discover:
+      # ③ 开启 discover 模式
+      enabled: true
+      # ④ 聚合子服务全部为 Swagger2 规范的文档
+      version: swagger2
+
+
+
+
+
+
+
+
